@@ -16,17 +16,17 @@ export const PlatformSection = () => {
   }
 
   return (
-    <section id="platforms" className="py-24 px-6 bg-secondary/20">
+    <section id="platforms" className="py-24 px-6 bg-white-soft text-navy-deep">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-xs font-mono text-muted-foreground tracking-[0.3em] uppercase mb-4">
+            <p className="text-xs font-mono text-navy-medium tracking-[0.3em] uppercase mb-4">
               Platform Analysis
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-navy-deep mb-6">
               Engagement by Platform
             </h2>
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-navy-medium mb-8">
               Compare average engagement levels across different social media platforms. 
               Drag to rotate the 3D chart and explore the data from different angles.
             </p>
@@ -35,7 +35,7 @@ export const PlatformSection = () => {
               {platformStats.map((stat, index) => (
                 <div 
                   key={stat.platform}
-                  className="flex items-center justify-between p-4 bg-card/50 border border-border rounded-lg"
+                  className="flex items-center justify-between p-4 bg-white-pure border border-navy-light/20 rounded-lg shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div 
@@ -44,11 +44,11 @@ export const PlatformSection = () => {
                         backgroundColor: ['#f5c842', '#d4a83a', '#b38f32', '#92762a'][index] 
                       }}
                     />
-                    <span className="font-medium text-foreground">{stat.platform}</span>
+                    <span className="font-medium text-navy-deep">{stat.platform}</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-foreground">{stat.avgEngagement.toFixed(0)}</p>
-                    <p className="text-xs text-muted-foreground">avg engagement</p>
+                    <p className="font-mono text-navy-deep">{stat.avgEngagement.toFixed(0)}</p>
+                    <p className="text-xs text-navy-medium">avg engagement</p>
                   </div>
                 </div>
               ))}
@@ -57,7 +57,7 @@ export const PlatformSection = () => {
           
           <div>
             <Platform3DChart data={platformStats} />
-            <p className="text-center text-xs text-muted-foreground mt-4 font-mono">
+            <p className="text-center text-xs text-navy-medium mt-4 font-mono">
               Click and drag to rotate • Scroll to zoom
             </p>
           </div>

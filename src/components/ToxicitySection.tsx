@@ -39,7 +39,7 @@ export const ToxicitySection = () => {
             </p>
             
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-card/50 border border-border rounded-lg">
+              <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-3 h-3 rounded-full bg-primary" />
                   <span className="text-sm text-muted-foreground">Misinformation</span>
@@ -49,9 +49,9 @@ export const ToxicitySection = () => {
                 </p>
               </div>
               
-              <div className="p-4 bg-card/50 border border-border rounded-lg">
+              <div className="p-4 bg-white-pure/10 border border-white-muted/30 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-navy-light" />
+                  <div className="w-3 h-3 rounded-full bg-white-soft" />
                   <span className="text-sm text-muted-foreground">Verified</span>
                 </div>
                 <p className="text-2xl font-bold text-foreground">

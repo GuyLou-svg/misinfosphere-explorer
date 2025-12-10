@@ -61,6 +61,11 @@ export default {
           glow: "hsl(var(--yellow-glow))",
           soft: "hsl(var(--yellow-soft))",
         },
+        white: {
+          pure: "hsl(var(--white-pure))",
+          soft: "hsl(var(--white-soft))",
+          muted: "hsl(var(--white-muted))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
