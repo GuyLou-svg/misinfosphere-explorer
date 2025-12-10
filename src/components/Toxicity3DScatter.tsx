@@ -69,7 +69,7 @@ const ScatterPoints = ({ data }: ScatterPointsProps) => {
         <DataPoint
           key={index}
           position={[point.x, point.y, point.z]}
-          color={point.isMisinformation ? '#f5c842' : '#2a4a6f'}
+          color={point.isMisinformation ? '#f5c842' : '#f5f5f5'}
           size={Math.min(point.engagement / 5000, 2) + 0.5}
           data={point}
         />
