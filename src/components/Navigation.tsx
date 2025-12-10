@@ -32,7 +32,7 @@ export const Navigation = () => {
           </div>
 
           <div className="text-xs font-mono text-muted-foreground tracking-wider">
-            College Project 2024
+            August 2025
           </div>
         </div>
       </div>
