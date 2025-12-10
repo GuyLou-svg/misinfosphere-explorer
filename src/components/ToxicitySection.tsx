@@ -35,7 +35,7 @@ export const ToxicitySection = () => {
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
               Explore the relationship between toxicity scores and engagement metrics. 
-              Yellow points indicate misinformation, while navy points represent verified content.
+              Yellow points indicate misinformation, while white points represent verified content.
             </p>
             
             <div className="grid grid-cols-2 gap-4">
