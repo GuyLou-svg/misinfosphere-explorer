@@ -69,7 +69,7 @@ const ScatterPoints = ({ data }: ScatterPointsProps) => {
         <DataPoint
           key={index}
           position={[point.x, point.y, point.z]}
-          color={point.isMisinformation ? '#f5c842' : '#f5f5f5'}
+          color={point.isMisinformation ? '#ffd02f' : '#f5f5f5'}
           size={Math.min(point.engagement / 5000, 2) + 0.5}
           data={point}
         />
@@ -84,19 +84,19 @@ const AxisLabels = () => {
       {/* X axis - Toxicity */}
       <mesh position={[0, -2, 0]}>
         <boxGeometry args={[5, 0.02, 0.02]} />
-        <meshStandardMaterial color="#f5c842" />
+        <meshStandardMaterial color="#ffd02f" />
       </mesh>
       
       {/* Y axis - Engagement */}
       <mesh position={[-2.5, 0, 0]}>
         <boxGeometry args={[0.02, 4, 0.02]} />
-        <meshStandardMaterial color="#f5c842" />
+        <meshStandardMaterial color="#ffd02f" />
       </mesh>
       
       {/* Z axis */}
       <mesh position={[-2.5, -2, 0]}>
         <boxGeometry args={[0.02, 0.02, 3]} />
-        <meshStandardMaterial color="#f5c842" opacity={0.5} transparent />
+        <meshStandardMaterial color="#ffd02f" opacity={0.8} transparent />
       </mesh>
     </group>
   );
@@ -111,8 +111,8 @@ export const Toxicity3DScatter = ({ data }: Toxicity3DScatterProps) => {
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
       <Canvas camera={{ position: [4, 2, 5], fov: 50 }}>
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#f5c842" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#4a6fa5" />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#09003b" />
         
         <ScatterPoints data={data} />
         <AxisLabels />
