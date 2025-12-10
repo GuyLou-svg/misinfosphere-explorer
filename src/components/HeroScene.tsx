@@ -12,7 +12,7 @@ const DataParticles = () => {
     const colors = new Float32Array(count * 3);
     const scales = new Float32Array(count);
     
-    const yellowColor = new THREE.Color('#f5c842');
+    const yellowColor = new THREE.Color('#ffd02f');
     const navyColor = new THREE.Color('#1a2744');
     
     for (let i = 0; i < count; i++) {
@@ -57,7 +57,7 @@ const DataParticles = () => {
       <sphereGeometry args={[1, 16, 16]} />
       <meshStandardMaterial
         vertexColors
-        emissive="#f5c842"
+        emissive="#ffd02f"
         emissiveIntensity={0.3}
         roughness={0.3}
         metalness={0.8}
@@ -80,9 +80,9 @@ const CentralSphere = () => {
       <mesh ref={meshRef}>
         <icosahedronGeometry args={[1.2, 1]} />
         <meshStandardMaterial
-          color="#f5c842"
+          color="#ffd02f"
           wireframe
-          emissive="#f5c842"
+          emissive="#ffd02f"
           emissiveIntensity={0.2}
         />
       </mesh>
@@ -98,8 +98,8 @@ export const HeroScene = () => {
         dpr={[1, 2]}
       >
         <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#f5c842" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#4a6fa5" />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#09003b" />
         
         <Stars
           radius={50}
