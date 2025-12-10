@@ -113,7 +113,7 @@ export const Platform3DChart = ({ data }: Platform3DChartProps) => {
           enablePan={false}
           minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 2.5}
-          autoRotate
+          //autoRotate
           autoRotateSpeed={0.5}
         />
       </Canvas>
