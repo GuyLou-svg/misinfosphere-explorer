@@ -6,72 +6,76 @@
 
 @layer base {
   :root {
-    /* Navy Blue, Yellow & White High Contrast Palette */
-    --background: 222 47% 8%;
-    --foreground: 0 0% 98%;
+    /* Exact Colors: #09003b (navy), #ffd02f (yellow), #ffffff (white) */
+    --background: 249 100% 12%;
+    --foreground: 0 0% 100%;
 
-    --card: 222 47% 11%;
-    --card-foreground: 0 0% 98%;
+    --card: 249 100% 15%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 249 100% 12%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 45 100% 55%;
-    --primary-foreground: 222 47% 8%;
+    --primary: 46 100% 59%;
+    --primary-foreground: 249 100% 12%;
 
-    --secondary: 0 0% 98%;
-    --secondary-foreground: 222 47% 8%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 249 100% 12%;
 
-    --muted: 222 30% 20%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 249 100% 20%;
+    --muted-foreground: 0 0% 75%;
 
-    --accent: 45 100% 45%;
-    --accent-foreground: 222 47% 8%;
+    --accent: 46 100% 59%;
+    --accent-foreground: 249 100% 12%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 30% 25%;
-    --input: 222 30% 25%;
-    --ring: 45 100% 55%;
+    --border: 249 100% 25%;
+    --input: 249 100% 20%;
+    --ring: 46 100% 59%;
 
     --radius: 0.5rem;
 
-    /* Custom tokens */
-    --navy-deep: 222 47% 5%;
-    --navy-medium: 222 47% 15%;
-    --navy-light: 222 40% 25%;
-    --yellow-bright: 45 100% 55%;
-    --yellow-glow: 45 100% 65%;
-    --yellow-soft: 45 80% 75%;
+    /* Navy palette - #09003b base */
+    --navy-deep: 249 100% 8%;
+    --navy-medium: 249 100% 15%;
+    --navy-light: 249 100% 25%;
+    
+    /* Yellow palette - #ffd02f base */
+    --yellow-bright: 46 100% 59%;
+    --yellow-glow: 46 100% 70%;
+    --yellow-soft: 46 100% 85%;
+
+    /* White palette - #ffffff base */
     --white-pure: 0 0% 100%;
-    --white-soft: 0 0% 95%;
-    --white-muted: 0 0% 85%;
+    --white-soft: 0 0% 96%;
+    --white-muted: 0 0% 80%;
 
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(222 47% 5%) 0%, hsl(222 47% 12%) 50%, hsl(222 40% 18%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(222 47% 12%) 0%, hsl(222 47% 8%) 100%);
-    --gradient-glow: radial-gradient(ellipse at center, hsl(45 100% 55% / 0.15) 0%, transparent 70%);
-    --gradient-accent: linear-gradient(90deg, hsl(45 100% 50%) 0%, hsl(45 100% 65%) 100%);
-    --gradient-white: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 92%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(249 100% 8%) 0%, hsl(249 100% 12%) 50%, hsl(249 100% 18%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(249 100% 15%) 0%, hsl(249 100% 12%) 100%);
+    --gradient-glow: radial-gradient(ellipse at center, hsl(46 100% 59% / 0.15) 0%, transparent 70%);
+    --gradient-accent: linear-gradient(90deg, hsl(46 100% 55%) 0%, hsl(46 100% 65%) 100%);
+    --gradient-white: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 96%) 100%);
 
     /* Shadows */
-    --shadow-glow: 0 0 40px hsl(45 100% 55% / 0.2);
-    --shadow-card: 0 10px 40px hsl(222 47% 3% / 0.5);
-    --shadow-elevated: 0 20px 60px hsl(222 47% 3% / 0.7);
+    --shadow-glow: 0 0 40px hsl(46 100% 59% / 0.2);
+    --shadow-card: 0 10px 40px hsl(249 100% 5% / 0.5);
+    --shadow-elevated: 0 20px 60px hsl(249 100% 5% / 0.7);
 
     /* Animations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 45 100% 55%;
-    --sidebar-primary-foreground: 222 47% 8%;
-    --sidebar-accent: 0 0% 98%;
-    --sidebar-accent-foreground: 222 47% 8%;
-    --sidebar-border: 222 30% 25%;
-    --sidebar-ring: 45 100% 55%;
+    --sidebar-background: 249 100% 12%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 46 100% 59%;
+    --sidebar-primary-foreground: 249 100% 12%;
+    --sidebar-accent: 0 0% 100%;
+    --sidebar-accent-foreground: 249 100% 12%;
+    --sidebar-border: 249 100% 25%;
+    --sidebar-ring: 46 100% 59%;
   }
 }
 
@@ -102,7 +106,7 @@
   }
 
   .glow-text {
-    text-shadow: 0 0 30px hsl(45 100% 55% / 0.5);
+    text-shadow: 0 0 30px hsl(46 100% 59% / 0.5);
   }
 
   .card-glow {
