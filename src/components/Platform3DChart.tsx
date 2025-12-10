@@ -39,7 +39,7 @@ const Bar = ({ position, height, color, label, value }: BarProps) => {
       <Text
         position={[0, -0.5, 0]}
         fontSize={0.25}
-        color="#f5c842"
+        color="#ffd02f"
         anchorX="center"
         anchorY="top"
       >
@@ -48,7 +48,7 @@ const Bar = ({ position, height, color, label, value }: BarProps) => {
       <Text
         position={[0, height + 0.3, 0]}
         fontSize={0.2}
-        color="#f5c842"
+        color="#ffd02f"
         anchorX="center"
         anchorY="bottom"
       >
@@ -65,7 +65,7 @@ interface PlatformBarsProps {
 const PlatformBars = ({ data }: PlatformBarsProps) => {
   const maxEngagement = Math.max(...data.map(d => d.avgEngagement));
   
-  const colors = ['#f5c842', '#d4a83a', '#b38f32', '#92762a'];
+  const colors = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
   
   return (
     <group position={[-2.5, -1, 0]}>
@@ -92,7 +92,7 @@ export const Platform3DChart = ({ data }: Platform3DChartProps) => {
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
       <Canvas camera={{ position: [4, 3, 6], fov: 50 }}>
         <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1} color="#f5c842" />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#4a6fa5" />
         
         <PlatformBars data={data} />
