@@ -15,7 +15,7 @@ export const Footer = () => {
           </p>
           
           <p className="text-xs font-mono text-muted-foreground">
-            College Project • 2024
+            August 2025
           </p>
         </div>
       </div>
