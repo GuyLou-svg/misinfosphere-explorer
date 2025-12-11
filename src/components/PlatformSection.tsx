@@ -33,26 +33,27 @@ export const PlatformSection = () => {
             </p>
             
             <div className="space-y-4">
-              {platformStats.map((stat, index) => (
-                <div 
-                  key={stat.platform}
-                  className="flex items-center justify-between p-4 bg-white-pure border border-navy-light/20 rounded-lg shadow-sm"
-                >
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-3 h-3 rounded-full"
-                      style={{ 
-                        backgroundColor: ['#f5c842', '#d4a83a', '#b38f32', '#92762a'][index] 
-                      }}
-                    />
-                    <span className="font-medium text-navy-deep">{stat.platform}</span>
+              {platformStats.map((stat, index) => {
+                const color = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'][index];
+                return (
+                  <div 
+                    key={stat.platform}
+                    className="flex items-center justify-between p-4 bg-white-pure border border-navy-light/20 rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span className="font-medium" style={{ color }}>{stat.platform}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-mono text-navy-deep">{(stat.avgToxicity * 100).toFixed(1)}%</p>
+                      <p className="text-xs text-navy-medium">avg toxicity</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-mono text-navy-deep">{(stat.avgToxicity * 100).toFixed(1)}%</p>
-                    <p className="text-xs text-navy-medium">avg toxicity</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           
@@ -63,6 +64,10 @@ export const PlatformSection = () => {
             </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+};
       </div>
     </section>
   );
