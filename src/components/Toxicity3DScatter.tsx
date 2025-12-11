@@ -110,7 +110,7 @@ export const Toxicity3DScatter = ({ data }: Toxicity3DScatterProps) => {
   return (
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
       <Canvas camera={{ position: [4, 2, 5], fov: 50 }}>
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.8} />
         <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#09003b" />
         
