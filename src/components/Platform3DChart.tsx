@@ -88,7 +88,6 @@ const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
         color={color}
         anchorX="center"
         anchorY="top"
-        font="/fonts/Inter-Bold.woff"
       >
         {label}
       </Text>
