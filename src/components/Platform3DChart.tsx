@@ -1,106 +1,150 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { PlatformStats } from '@/types/data';
 
-interface BarProps {
-  position: [number, number, number];
-  height: number;
-  color: string;
-  label: string;
-  value: number;
+interface ViolinData {
+  platform: string;
+  density: number[];
+  mean: number;
 }
 
-const Bar = ({ position, height, color, label, value }: BarProps) => {
+interface ViolinProps {
+  position: [number, number, number];
+  density: number[];
+  mean: number;
+  color: string;
+  label: string;
+}
+
+const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.scale.y = THREE.MathUtils.lerp(
-      meshRef.current.scale.y,
-      height,
-      0.05
-    );
+  const geometry = useMemo(() => {
+    const shape = new THREE.Shape();
+    const bins = density.length;
+    const height = 3;
+    const maxWidth = 0.5;
+    
+    // Right side of violin
+    shape.moveTo(0, 0);
+    for (let i = 0; i < bins; i++) {
+      const y = (i / (bins - 1)) * height;
+      const width = density[i] * maxWidth;
+      shape.lineTo(width, y);
+    }
+    
+    // Left side of violin (mirrored)
+    for (let i = bins - 1; i >= 0; i--) {
+      const y = (i / (bins - 1)) * height;
+      const width = -density[i] * maxWidth;
+      shape.lineTo(width, y);
+    }
+    
+    shape.closePath();
+    
+    const extrudeSettings = {
+      steps: 1,
+      depth: 0.3,
+      bevelEnabled: true,
+      bevelThickness: 0.05,
+      bevelSize: 0.05,
+      bevelSegments: 3,
+    };
+    
+    return new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  }, [density]);
+
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.002;
+    }
   });
 
   return (
     <group position={position}>
-      <mesh ref={meshRef} position={[0, height / 2, 0]}>
-        <boxGeometry args={[0.8, 1, 0.8]} />
+      <mesh ref={meshRef} geometry={geometry} position={[0, 0, -0.15]}>
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={0.2}
-          roughness={0.3}
-          metalness={0.7}
+          emissiveIntensity={0.3}
+          roughness={0.4}
+          metalness={0.6}
+          transparent
+          opacity={0.9}
         />
       </mesh>
+      
+      {/* Mean line */}
+      <mesh position={[0, mean * 3, 0.2]}>
+        <boxGeometry args={[0.8, 0.03, 0.03]} />
+        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
+      </mesh>
+      
+      {/* Platform label */}
       <Text
-        position={[0, -0.5, 0]}
-        fontSize={0.25}
-        color="#ffd02f"
+        position={[0, -0.4, 0]}
+        fontSize={0.22}
+        color={color}
         anchorX="center"
         anchorY="top"
+        font="/fonts/Inter-Bold.woff"
       >
         {label}
       </Text>
+      
+      {/* Mean value label */}
       <Text
-        position={[0, height + 0.3, 0]}
-        fontSize={0.2}
-        color="#ffd02f"
+        position={[0, 3.3, 0]}
+        fontSize={0.18}
+        color="#ffffff"
         anchorX="center"
         anchorY="bottom"
       >
-        {(value * 100).toFixed(1)}%
+        {(mean * 100).toFixed(1)}%
       </Text>
-    </group>
-  );
-};
-
-interface PlatformBarsProps {
-  data: PlatformStats[];
-}
-
-const PlatformBars = ({ data }: PlatformBarsProps) => {
-  const maxToxicity = Math.max(...data.map(d => d.avgToxicity));
-  
-  const colors = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
-  
-  return (
-    <group position={[-2.5, -1, 0]}>
-      {data.map((platform, index) => (
-        <Bar
-          key={platform.platform}
-          position={[index * 1.5, 0, 0]}
-          height={(platform.avgToxicity / maxToxicity) * 3 + 0.5}
-          color={colors[index % colors.length]}
-          label={platform.platform}
-          value={platform.avgToxicity}
-        />
-      ))}
     </group>
   );
 };
 
 interface Platform3DChartProps {
-  data: PlatformStats[];
+  data: ViolinData[];
+  colors: string[];
 }
 
-export const Platform3DChart = ({ data }: Platform3DChartProps) => {
+export const Platform3DChart = ({ data, colors }: Platform3DChartProps) => {
   return (
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
-      <Canvas camera={{ position: [4, 3, 6], fov: 50 }}>
+      <Canvas camera={{ position: [0, 2, 8], fov: 45 }}>
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
-        <pointLight position={[-5, 5, -5]} intensity={0.5} color="#4a6fa5" />
+        <pointLight position={[-5, 5, -5]} intensity={0.5} color="#ffffff" />
         
-        <PlatformBars data={data} />
+        <group position={[-3, -1.5, 0]}>
+          {data.map((item, index) => (
+            <Violin
+              key={item.platform}
+              position={[index * 2, 0, 0]}
+              density={item.density}
+              mean={item.mean}
+              color={colors[index]}
+              label={item.platform}
+            />
+          ))}
+        </group>
         
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.5, -1, 0]}>
-          <planeGeometry args={[8, 6, 8, 6]} />
+        {/* Y-axis labels */}
+        <group position={[-4.2, -1.5, 0]}>
+          <Text position={[0, 0, 0]} fontSize={0.15} color="#ffffff" anchorX="right">0%</Text>
+          <Text position={[0, 1.5, 0]} fontSize={0.15} color="#ffffff" anchorX="right">50%</Text>
+          <Text position={[0, 3, 0]} fontSize={0.15} color="#ffffff" anchorX="right">100%</Text>
+        </group>
+        
+        {/* Grid floor */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1, -1.5, 0]}>
+          <planeGeometry args={[10, 6, 10, 6]} />
           <meshStandardMaterial
-            color="#1a2744"
+            color="#09003b"
             wireframe
             transparent
             opacity={0.3}
@@ -111,7 +155,7 @@ export const Platform3DChart = ({ data }: Platform3DChartProps) => {
           enableZoom={true}
           enablePan={false}
           minPolarAngle={Math.PI / 6}
-          maxPolarAngle={Math.PI / 2.5}
+          maxPolarAngle={Math.PI / 2.2}
         />
       </Canvas>
     </div>

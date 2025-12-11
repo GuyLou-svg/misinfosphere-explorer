@@ -1,9 +1,12 @@
 import { useDataset } from "@/hooks/useDataset";
 import { Platform3DChart } from "./Platform3DChart";
 
+const PLATFORM_COLORS = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
+
 export const PlatformSection = () => {
-  const { loading, getPlatformStats } = useDataset();
+  const { loading, getPlatformStats, getToxicityDistribution } = useDataset();
   const platformStats = getPlatformStats();
+  const violinData = getToxicityDistribution();
 
   if (loading) {
     return (
@@ -24,16 +27,16 @@ export const PlatformSection = () => {
               Platform Analysis
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-navy-deep mb-6">
-              Toxicity by Platform
+              Toxicity Distribution
             </h2>
             <p className="text-lg text-navy-medium mb-8">
-              Compare average toxicity levels across different social media platforms. 
-              Drag to rotate the 3D chart and explore the data from different angles.
+              Violin plots showing the distribution of toxicity scores across platforms. 
+              Wider sections indicate more posts at that toxicity level. White line shows the mean.
             </p>
             
             <div className="space-y-4">
               {platformStats.map((stat, index) => {
-                const color = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'][index];
+                const color = PLATFORM_COLORS[index];
                 return (
                   <div 
                     key={stat.platform}
@@ -57,16 +60,12 @@ export const PlatformSection = () => {
           </div>
           
           <div>
-            <Platform3DChart data={platformStats} />
+            <Platform3DChart data={violinData} colors={PLATFORM_COLORS} />
             <p className="text-center text-xs text-navy-medium mt-4 font-mono">
-              Click and drag to rotate • Scroll to zoom
+              Click and drag to rotate • Scroll to zoom • White line = mean
             </p>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
       </div>
     </section>
   );
