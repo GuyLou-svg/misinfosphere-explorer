@@ -60,6 +60,35 @@ export const useDataset = () => {
     });
   };
 
+  const getToxicityDistribution = () => {
+    const platforms = ['Reddit', 'Twitter', 'Facebook', 'Telegram'];
+    const bins = 20;
+    
+    return platforms.map(platform => {
+      const platformData = data.filter(d => d.platform === platform);
+      const toxicityValues = platformData.map(d => d.toxicity_score || 0);
+      
+      // Create histogram bins
+      const histogram = new Array(bins).fill(0);
+      toxicityValues.forEach(val => {
+        const binIndex = Math.min(Math.floor(val * bins), bins - 1);
+        histogram[binIndex]++;
+      });
+      
+      // Normalize to create density
+      const maxCount = Math.max(...histogram, 1);
+      const density = histogram.map(count => count / maxCount);
+      
+      return {
+        platform,
+        density,
+        mean: toxicityValues.length > 0 
+          ? toxicityValues.reduce((a, b) => a + b, 0) / toxicityValues.length 
+          : 0,
+      };
+    });
+  };
+
   const getScatterData = (): ChartDataPoint[] => {
     return data.slice(0, 200).map((d, i) => ({
       platform: d.platform,
@@ -91,5 +120,6 @@ export const useDataset = () => {
     getPlatformStats,
     getScatterData,
     getTotalStats,
+    getToxicityDistribution,
   };
 };
