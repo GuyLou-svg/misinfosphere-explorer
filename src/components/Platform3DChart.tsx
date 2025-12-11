@@ -63,7 +63,7 @@ const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
           roughness={0.4}
           metalness={0.6}
           transparent
-          opacity={0.9}
+          opacity={0.6}
         />
       </mesh>
       
@@ -95,16 +95,16 @@ interface Platform3DChartProps {
 export const Platform3DChart = ({ data, colors }: Platform3DChartProps) => {
   return (
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
-      <Canvas camera={{ position: [0, 2, 8], fov: 45 }}>
+      <Canvas camera={{ position: [6, 2, 6], fov: 45 }}>
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#ffffff" />
         
-        <group position={[-3, -1.5, 0]}>
+        <group position={[0, -1.5, 2]}>
           {data.map((item, index) => (
             <Violin
               key={item.platform}
-              position={[index * 2, 0, 0]}
+              position={[0, 0, -index * 1.5]}
               density={item.density}
               mean={item.mean}
               color={colors[index]}
@@ -114,7 +114,7 @@ export const Platform3DChart = ({ data, colors }: Platform3DChartProps) => {
         </group>
         
         {/* Y-axis labels */}
-        <group position={[-4.2, -1.5, 0]}>
+        <group position={[-1.2, -1.5, 2]}>
           <Text position={[0, 0, 0]} fontSize={0.15} color="#ffffff" anchorX="right">0%</Text>
           <Text position={[0, 1.5, 0]} fontSize={0.15} color="#ffffff" anchorX="right">50%</Text>
           <Text position={[0, 3, 0]} fontSize={0.15} color="#ffffff" anchorX="right">100%</Text>
