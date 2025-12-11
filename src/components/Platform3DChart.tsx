@@ -14,38 +14,31 @@ interface ViolinProps {
 const Violin = ({ position, distribution, color, label }: ViolinProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
-  // Create violin shape from distribution
   const geometry = useMemo(() => {
     const bins = 20;
     const histogram = new Array(bins).fill(0);
     
-    // Calculate histogram (distribution is already in percentage 0-100)
     distribution.forEach(value => {
       const binIndex = Math.floor((value / 100) * bins);
       const clampedIndex = Math.min(Math.max(binIndex, 0), bins - 1);
       histogram[clampedIndex]++;
     });
     
-    // Normalize histogram
     const maxCount = Math.max(...histogram, 1);
     const normalizedHist = histogram.map(count => count / maxCount);
     
-    // Create shape points for violin
     const shape = new THREE.Shape();
     const width = 0.6;
     const height = 3;
     
-    // Start at bottom center
     shape.moveTo(0, 0);
     
-    // Draw right side going up
     for (let i = 0; i < bins; i++) {
       const y = (i / bins) * height;
       const x = (normalizedHist[i] * width) / 2;
       shape.lineTo(x, y);
     }
     
-    // Draw left side going down
     for (let i = bins - 1; i >= 0; i--) {
       const y = (i / bins) * height;
       const x = -(normalizedHist[i] * width) / 2;
@@ -66,11 +59,14 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
   }, [distribution]);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
-    meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+    if (meshRef.current) {
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+    }
   });
 
-  const mean = distribution.reduce((a, b) => a + b, 0) / distribution.length;
+  const mean = distribution.length > 0 
+    ? distribution.reduce((a, b) => a + b, 0) / distribution.length 
+    : 0;
 
   return (
     <group position={position}>
@@ -86,7 +82,6 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
         />
       </mesh>
       
-      {/* Mean line */}
       <mesh position={[0, (mean / 100) * 3, 0]}>
         <boxGeometry args={[0.8, 0.02, 0.4]} />
         <meshStandardMaterial color="#ff4444" emissive="#ff4444" emissiveIntensity={0.5} />
@@ -101,7 +96,6 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
       >
         {label}
       </Text>
-
     </group>
   );
 };
@@ -117,7 +111,6 @@ const PlatformViolins = ({ rawData }: PlatformViolinsProps) => {
   const platformDistributions = useMemo(() => {
     return platforms.map(platform => {
       const platformData = rawData.filter(d => d.platform === platform);
-      // Convert toxicity scores to percentages (0-100)
       return platformData.map(d => (d.toxicity_score || 0) * 100);
     });
   }, [rawData]);
@@ -137,6 +130,35 @@ const PlatformViolins = ({ rawData }: PlatformViolinsProps) => {
   );
 };
 
+const ScaleBar = () => {
+  return (
+    <group position={[-4, -1, 0]}>
+      <mesh position={[0, 1.5, 0]}>
+        <boxGeometry args={[0.05, 3, 0.05]} />
+        <meshStandardMaterial color="#ffd02f" />
+      </mesh>
+      
+      {[0, 25, 50, 75, 100].map((value) => (
+        <group key={value}>
+          <mesh position={[0, (value / 100) * 3, 0]}>
+            <boxGeometry args={[0.2, 0.02, 0.02]} />
+            <meshStandardMaterial color="#ffd02f" />
+          </mesh>
+          <Text
+            position={[-0.3, (value / 100) * 3, 0]}
+            fontSize={0.2}
+            color="#ffd02f"
+            anchorX="right"
+            anchorY="middle"
+          >
+            {value}%
+          </Text>
+        </group>
+      ))}
+    </group>
+  );
+};
+
 interface Platform3DChartProps {
   data: PlatformStats[];
   rawData?: any[];
@@ -151,17 +173,7 @@ export const Platform3DChart = ({ data, rawData = [] }: Platform3DChartProps) =>
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#4a6fa5" />
         
         <PlatformViolins rawData={rawData} />
-        
-        {/* Grid floor */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.5, -1, 0]}>
-          <planeGeometry args={[8, 6, 8, 6]} />
-          <meshStandardMaterial
-            color="#1a2744"
-            wireframe
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
+        <ScaleBar />
         
         <OrbitControls
           enableZoom={true}
