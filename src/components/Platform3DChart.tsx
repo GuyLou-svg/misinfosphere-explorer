@@ -52,7 +52,7 @@ const Bar = ({ position, height, color, label, value }: BarProps) => {
         anchorX="center"
         anchorY="bottom"
       >
-        {value.toFixed(0)}
+        {value.toFixed(2)}
       </Text>
     </group>
   );
@@ -63,7 +63,7 @@ interface PlatformBarsProps {
 }
 
 const PlatformBars = ({ data }: PlatformBarsProps) => {
-  const maxEngagement = Math.max(...data.map(d => d.avgEngagement));
+  const maxToxicity = Math.max(...data.map(d => d.avgToxicity));
   
   const colors = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
   
@@ -73,10 +73,10 @@ const PlatformBars = ({ data }: PlatformBarsProps) => {
         <Bar
           key={platform.platform}
           position={[index * 1.5, 0, 0]}
-          height={(platform.avgEngagement / maxEngagement) * 3 + 0.5}
+          height={(platform.avgToxicity / maxToxicity) * 3 + 0.5}
           color={colors[index % colors.length]}
           label={platform.platform}
-          value={platform.avgEngagement}
+          value={platform.avgToxicity}
         />
       ))}
     </group>
