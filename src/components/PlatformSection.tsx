@@ -28,7 +28,7 @@ export const PlatformSection = () => {
             </h2>
             <p className="text-lg text-navy-medium mb-8">
               Explore how toxicity scores are distributed across different social media platforms. 
-              The violin shapes show the concentration of posts at different toxicity levels, 
+              The violin shapes show the concentration of posts at different toxicity levels (0-100%), 
               with the red line indicating the mean. Drag to rotate the 3D chart.
             </p>
             
@@ -48,7 +48,7 @@ export const PlatformSection = () => {
                     <span className="font-medium text-navy-deep">{stat.platform}</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-navy-deep">{stat.avgToxicity.toFixed(3)}</p>
+                    <p className="font-mono text-navy-deep">{(stat.avgToxicity * 100).toFixed(1)}%</p>
                     <p className="text-xs text-navy-medium">avg toxicity</p>
                   </div>
                 </div>
