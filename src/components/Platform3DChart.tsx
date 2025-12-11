@@ -1,41 +1,98 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Float } from '@react-three/drei';
+import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { PlatformStats } from '@/types/data';
 
-interface BarProps {
+interface ViolinProps {
   position: [number, number, number];
-  height: number;
+  distribution: number[];
   color: string;
   label: string;
-  value: number;
 }
 
-const Bar = ({ position, height, color, label, value }: BarProps) => {
+const Violin = ({ position, distribution, color, label }: ViolinProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
+  // Create violin shape from distribution
+  const geometry = useMemo(() => {
+    const bins = 20;
+    const histogram = new Array(bins).fill(0);
+    
+    // Calculate histogram
+    distribution.forEach(value => {
+      const binIndex = Math.floor(value * bins);
+      const clampedIndex = Math.min(Math.max(binIndex, 0), bins - 1);
+      histogram[clampedIndex]++;
+    });
+    
+    // Normalize histogram
+    const maxCount = Math.max(...histogram, 1);
+    const normalizedHist = histogram.map(count => count / maxCount);
+    
+    // Create shape points for violin
+    const shape = new THREE.Shape();
+    const width = 0.6;
+    const height = 3;
+    
+    // Start at bottom center
+    shape.moveTo(0, 0);
+    
+    // Draw right side going up
+    for (let i = 0; i < bins; i++) {
+      const y = (i / bins) * height;
+      const x = (normalizedHist[i] * width) / 2;
+      shape.lineTo(x, y);
+    }
+    
+    // Draw left side going down
+    for (let i = bins - 1; i >= 0; i--) {
+      const y = (i / bins) * height;
+      const x = -(normalizedHist[i] * width) / 2;
+      shape.lineTo(x, y);
+    }
+    
+    shape.lineTo(0, 0);
+    
+    const extrudeSettings = {
+      depth: 0.3,
+      bevelEnabled: true,
+      bevelThickness: 0.05,
+      bevelSize: 0.05,
+      bevelSegments: 2
+    };
+    
+    return new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  }, [distribution]);
+
   useFrame((state) => {
     if (!meshRef.current) return;
-    meshRef.current.scale.y = THREE.MathUtils.lerp(
-      meshRef.current.scale.y,
-      height,
-      0.05
-    );
+    meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
   });
+
+  const mean = distribution.reduce((a, b) => a + b, 0) / distribution.length;
+  const median = [...distribution].sort((a, b) => a - b)[Math.floor(distribution.length / 2)];
 
   return (
     <group position={position}>
-      <mesh ref={meshRef} position={[0, height / 2, 0]}>
-        <boxGeometry args={[0.8, 1, 0.8]} />
+      <mesh ref={meshRef} geometry={geometry} position={[0, 0, -0.15]}>
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={0.2}
+          emissiveIntensity={0.3}
           roughness={0.3}
-          metalness={0.7}
+          metalness={0.6}
+          transparent
+          opacity={0.9}
         />
       </mesh>
+      
+      {/* Mean line */}
+      <mesh position={[0, mean * 3, 0]}>
+        <boxGeometry args={[0.8, 0.02, 0.4]} />
+        <meshStandardMaterial color="#ff4444" emissive="#ff4444" emissiveIntensity={0.5} />
+      </mesh>
+      
       <Text
         position={[0, -0.5, 0]}
         fontSize={0.25}
@@ -46,37 +103,42 @@ const Bar = ({ position, height, color, label, value }: BarProps) => {
         {label}
       </Text>
       <Text
-        position={[0, height + 0.3, 0]}
-        fontSize={0.2}
+        position={[0, 3.5, 0]}
+        fontSize={0.15}
         color="#ffd02f"
         anchorX="center"
         anchorY="bottom"
       >
-        {value.toFixed(2)}
+        μ: {mean.toFixed(3)}
       </Text>
     </group>
   );
 };
 
-interface PlatformBarsProps {
-  data: PlatformStats[];
+interface PlatformViolinsProps {
+  rawData: any[];
 }
 
-const PlatformBars = ({ data }: PlatformBarsProps) => {
-  const maxToxicity = Math.max(...data.map(d => d.avgToxicity));
-  
+const PlatformViolins = ({ rawData }: PlatformViolinsProps) => {
+  const platforms = ['Reddit', 'Twitter', 'Facebook', 'Telegram'];
   const colors = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
+  
+  const platformDistributions = useMemo(() => {
+    return platforms.map(platform => {
+      const platformData = rawData.filter(d => d.platform === platform);
+      return platformData.map(d => d.toxicity_score || 0);
+    });
+  }, [rawData]);
   
   return (
     <group position={[-2.5, -1, 0]}>
-      {data.map((platform, index) => (
-        <Bar
-          key={platform.platform}
+      {platforms.map((platform, index) => (
+        <Violin
+          key={platform}
           position={[index * 1.5, 0, 0]}
-          height={(platform.avgToxicity / maxToxicity) * 3 + 0.5}
-          color={colors[index % colors.length]}
-          label={platform.platform}
-          value={platform.avgToxicity}
+          distribution={platformDistributions[index]}
+          color={colors[index]}
+          label={platform}
         />
       ))}
     </group>
@@ -85,9 +147,10 @@ const PlatformBars = ({ data }: PlatformBarsProps) => {
 
 interface Platform3DChartProps {
   data: PlatformStats[];
+  rawData?: any[];
 }
 
-export const Platform3DChart = ({ data }: Platform3DChartProps) => {
+export const Platform3DChart = ({ data, rawData = [] }: Platform3DChartProps) => {
   return (
     <div className="w-full h-[500px] rounded-lg overflow-hidden border border-border bg-card/50">
       <Canvas camera={{ position: [4, 3, 6], fov: 50 }}>
@@ -95,7 +158,7 @@ export const Platform3DChart = ({ data }: Platform3DChartProps) => {
         <pointLight position={[10, 10, 10]} intensity={1} color="#ffd02f" />
         <pointLight position={[-5, 5, -5]} intensity={0.5} color="#4a6fa5" />
         
-        <PlatformBars data={data} />
+        <PlatformViolins rawData={rawData} />
         
         {/* Grid floor */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.5, -1, 0]}>
@@ -113,8 +176,6 @@ export const Platform3DChart = ({ data }: Platform3DChartProps) => {
           enablePan={false}
           minPolarAngle={Math.PI / 6}
           maxPolarAngle={Math.PI / 2.5}
-          //autoRotate
-          //autoRotateSpeed={0.5}
         />
       </Canvas>
     </div>
