@@ -19,9 +19,9 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
     const bins = 20;
     const histogram = new Array(bins).fill(0);
     
-    // Calculate histogram
+    // Calculate histogram (distribution is already in percentage 0-100)
     distribution.forEach(value => {
-      const binIndex = Math.floor(value * bins);
+      const binIndex = Math.floor((value / 100) * bins);
       const clampedIndex = Math.min(Math.max(binIndex, 0), bins - 1);
       histogram[clampedIndex]++;
     });
@@ -71,7 +71,6 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
   });
 
   const mean = distribution.reduce((a, b) => a + b, 0) / distribution.length;
-  const median = [...distribution].sort((a, b) => a - b)[Math.floor(distribution.length / 2)];
 
   return (
     <group position={position}>
@@ -88,7 +87,7 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
       </mesh>
       
       {/* Mean line */}
-      <mesh position={[0, mean * 3, 0]}>
+      <mesh position={[0, (mean / 100) * 3, 0]}>
         <boxGeometry args={[0.8, 0.02, 0.4]} />
         <meshStandardMaterial color="#ff4444" emissive="#ff4444" emissiveIntensity={0.5} />
       </mesh>
@@ -109,7 +108,7 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
         anchorX="center"
         anchorY="bottom"
       >
-        μ: {mean.toFixed(3)}
+        μ: {mean.toFixed(1)}%
       </Text>
     </group>
   );
@@ -126,7 +125,8 @@ const PlatformViolins = ({ rawData }: PlatformViolinsProps) => {
   const platformDistributions = useMemo(() => {
     return platforms.map(platform => {
       const platformData = rawData.filter(d => d.platform === platform);
-      return platformData.map(d => d.toxicity_score || 0);
+      // Convert toxicity scores to percentages (0-100)
+      return platformData.map(d => (d.toxicity_score || 0) * 100);
     });
   }, [rawData]);
   
