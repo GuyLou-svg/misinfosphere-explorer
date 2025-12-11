@@ -101,15 +101,7 @@ const Violin = ({ position, distribution, color, label }: ViolinProps) => {
       >
         {label}
       </Text>
-      <Text
-        position={[0, 3.5, 0]}
-        fontSize={0.15}
-        color="#ffd02f"
-        anchorX="center"
-        anchorY="bottom"
-      >
-        μ: {mean.toFixed(1)}%
-      </Text>
+
     </group>
   );
 };
