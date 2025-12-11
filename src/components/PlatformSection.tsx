@@ -2,7 +2,7 @@ import { useDataset } from "@/hooks/useDataset";
 import { Platform3DChart } from "./Platform3DChart";
 
 export const PlatformSection = () => {
-  const { loading, getPlatformStats, data } = useDataset();
+  const { loading, getPlatformStats } = useDataset();
   const platformStats = getPlatformStats();
 
   if (loading) {
@@ -24,45 +24,49 @@ export const PlatformSection = () => {
               Platform Analysis
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-navy-deep mb-6">
-              Toxicity Distribution by Platform
+              Toxicity by Platform
             </h2>
             <p className="text-lg text-navy-medium mb-8">
-              Explore how toxicity scores are distributed across different social media platforms. 
-              The violin shapes show the concentration of posts at different toxicity levels, 
-              with the red line indicating the mean. Drag to rotate the 3D chart.
+              Compare average toxicity levels across different social media platforms. 
+              Drag to rotate the 3D chart and explore the data from different angles.
             </p>
             
             <div className="space-y-4">
-              {platformStats.map((stat, index) => (
-                <div 
-                  key={stat.platform}
-                  className="flex items-center justify-between p-4 bg-white-pure border border-navy-light/20 rounded-lg shadow-sm"
-                >
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-3 h-3 rounded-full"
-                      style={{ 
-                        backgroundColor: ['#f5c842', '#d4a83a', '#b38f32', '#92762a'][index] 
-                      }}
-                    />
-                    <span className="font-medium text-navy-deep">{stat.platform}</span>
+              {platformStats.map((stat, index) => {
+                const color = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'][index];
+                return (
+                  <div 
+                    key={stat.platform}
+                    className="flex items-center justify-between p-4 bg-white-pure border border-navy-light/20 rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span className="font-medium" style={{ color }}>{stat.platform}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-mono text-navy-deep">{(stat.avgToxicity * 100).toFixed(1)}%</p>
+                      <p className="text-xs text-navy-medium">avg toxicity</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-mono text-navy-deep">{stat.avgToxicity.toFixed(3)}</p>
-                    <p className="text-xs text-navy-medium">avg toxicity</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           
           <div>
-            <Platform3DChart data={platformStats} rawData={data} />
+            <Platform3DChart data={platformStats} />
             <p className="text-center text-xs text-navy-medium mt-4 font-mono">
-              Click and drag to rotate • Scroll to zoom • Red line = mean
+              Click and drag to rotate • Scroll to zoom
             </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+};
       </div>
     </section>
   );
