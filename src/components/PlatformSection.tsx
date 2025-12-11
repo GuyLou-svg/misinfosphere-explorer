@@ -2,7 +2,7 @@ import { useDataset } from "@/hooks/useDataset";
 import { Platform3DChart } from "./Platform3DChart";
 
 export const PlatformSection = () => {
-  const { loading, getPlatformStats } = useDataset();
+  const { loading, getPlatformStats, data } = useDataset();
   const platformStats = getPlatformStats();
 
   if (loading) {
@@ -24,11 +24,12 @@ export const PlatformSection = () => {
               Platform Analysis
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-navy-deep mb-6">
-              Engagement by Platform
+              Toxicity Distribution by Platform
             </h2>
             <p className="text-lg text-navy-medium mb-8">
-              Compare average engagement levels across different social media platforms. 
-              Drag to rotate the 3D chart and explore the data from different angles.
+              Explore how toxicity scores are distributed across different social media platforms. 
+              The violin shapes show the concentration of posts at different toxicity levels, 
+              with the red line indicating the mean. Drag to rotate the 3D chart.
             </p>
             
             <div className="space-y-4">
@@ -47,8 +48,8 @@ export const PlatformSection = () => {
                     <span className="font-medium text-navy-deep">{stat.platform}</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-mono text-navy-deep">{stat.avgEngagement.toFixed(0)}</p>
-                    <p className="text-xs text-navy-medium">avg engagement</p>
+                    <p className="font-mono text-navy-deep">{stat.avgToxicity.toFixed(3)}</p>
+                    <p className="text-xs text-navy-medium">avg toxicity</p>
                   </div>
                 </div>
               ))}
@@ -56,9 +57,9 @@ export const PlatformSection = () => {
           </div>
           
           <div>
-            <Platform3DChart data={platformStats} />
+            <Platform3DChart data={platformStats} rawData={data} />
             <p className="text-center text-xs text-navy-medium mt-4 font-mono">
-              Click and drag to rotate • Scroll to zoom
+              Click and drag to rotate • Scroll to zoom • Red line = mean
             </p>
           </div>
         </div>
