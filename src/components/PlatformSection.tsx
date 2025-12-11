@@ -1,7 +1,8 @@
 import { useDataset } from "@/hooks/useDataset";
 import { Platform3DChart } from "./Platform3DChart";
 
-const PLATFORM_COLORS = ['#ffd02f', '#ffcb0f', '#ffcf54', '#ffe291'];
+// More distinct colors: bright yellow, gold, orange, amber
+const PLATFORM_COLORS = ['#ffd02f', '#e6a800', '#cc7a00', '#b35900'];
 
 export const PlatformSection = () => {
   const { loading, getPlatformStats, getToxicityDistribution } = useDataset();
