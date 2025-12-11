@@ -1,5 +1,5 @@
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -18,8 +18,6 @@ interface ViolinProps {
 }
 
 const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
   const geometry = useMemo(() => {
     const shape = new THREE.Shape();
     const bins = density.length;
@@ -55,15 +53,9 @@ const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
     return new THREE.ExtrudeGeometry(shape, extrudeSettings);
   }, [density]);
 
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
-    }
-  });
-
   return (
     <group position={position}>
-      <mesh ref={meshRef} geometry={geometry} position={[0, 0, -0.15]}>
+      <mesh geometry={geometry} position={[0, 0, -0.15]}>
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -90,17 +82,6 @@ const Violin = ({ position, density, mean, color, label }: ViolinProps) => {
         anchorY="top"
       >
         {label}
-      </Text>
-      
-      {/* Mean value label */}
-      <Text
-        position={[0, 3.3, 0]}
-        fontSize={0.18}
-        color="#ffffff"
-        anchorX="center"
-        anchorY="bottom"
-      >
-        {(mean * 100).toFixed(1)}%
       </Text>
     </group>
   );
@@ -138,17 +119,6 @@ export const Platform3DChart = ({ data, colors }: Platform3DChartProps) => {
           <Text position={[0, 1.5, 0]} fontSize={0.15} color="#ffffff" anchorX="right">50%</Text>
           <Text position={[0, 3, 0]} fontSize={0.15} color="#ffffff" anchorX="right">100%</Text>
         </group>
-        
-        {/* Grid floor */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1, -1.5, 0]}>
-          <planeGeometry args={[10, 6, 10, 6]} />
-          <meshStandardMaterial
-            color="#09003b"
-            wireframe
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
         
         <OrbitControls
           enableZoom={true}
