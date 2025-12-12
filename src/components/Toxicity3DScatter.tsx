@@ -36,25 +36,25 @@ const DataPoint = ({ position, color, size, data }: DataPointProps) => {
         roughness={0.1}
         metalness={0.2}
         transparent
-        opacity={0.85}
+        opacity={0.92}
         transmission={0.3}
         thickness={0.5}
         clearcoat={1}
         clearcoatRoughness={0.1}
       />
       {hovered && (
-        <Html distanceFactor={10}>
-          <div className="bg-card border border-border px-3 py-2 rounded-md shadow-lg min-w-[150px]">
-            <p className="text-xs font-mono text-muted-foreground">{data.platform}</p>
-            <p className="text-sm font-semibold text-foreground">
+        <Html distanceFactor={5} style={{ pointerEvents: 'none' }}>
+          <div className="bg-card/95 border border-border px-2 py-1.5 rounded shadow-lg text-[10px] whitespace-nowrap">
+            <p className="font-mono text-muted-foreground">{data.platform}</p>
+            <p className="font-semibold text-foreground">
               Toxicity: {(data.toxicity * 100).toFixed(1)}%
             </p>
-            <p className="text-xs text-muted-foreground">
-              Engagement: {data.engagement.toLocaleString()}
+            <p className="text-muted-foreground">
+              Eng: {data.engagement.toLocaleString()}
             </p>
             {data.isMisinformation && (
-              <span className="inline-block mt-1 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">
-                Misinformation
+              <span className="inline-block mt-0.5 bg-primary/20 text-primary px-1 py-0.5 rounded">
+                Misinfo
               </span>
             )}
           </div>
