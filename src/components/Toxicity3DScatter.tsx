@@ -134,8 +134,7 @@ export const Toxicity3DScatter = ({ data }: Toxicity3DScatterProps) => {
         <OrbitControls
           enableZoom={true}
           enablePan={true}
-          autoRotate
-          autoRotateSpeed={0.3}
+          autoRotate={false}
         />
       </Canvas>
     </div>
