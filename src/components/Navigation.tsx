@@ -4,7 +4,6 @@ const navItems = [
   { label: "Overview", href: "#overview" },
   { label: "Platforms", href: "#platforms" },
   { label: "Toxicity", href: "#toxicity" },
-  { label: "Insights", href: "#insights" },
 ];
 
 export const Navigation = () => {
